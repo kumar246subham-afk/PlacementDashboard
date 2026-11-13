@@ -1,0 +1,70 @@
+@model PlacementDashboard.Models.Company
+@{
+    ViewData["Title"] = "Add Recruiting Company";
+}
+
+<div class="d-flex align-items-center mb-4">
+    <a asp-action="Index" class="btn btn-outline-secondary me-3"><i class="bi bi-arrow-left"></i></a>
+    <h2 class="fw-bold mb-0">Register Recruiting Company</h2>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Company Information</h5>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Create" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="All" class="alert alert-danger" style="display:none"></div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="CompanyName" class="form-label fw-semibold"></label>
+                            <input asp-for="CompanyName" class="form-control" placeholder="e.g. Tata Consultancy Services" />
+                            <span asp-validation-for="CompanyName" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Industry" class="form-label fw-semibold"></label>
+                            <input asp-for="Industry" class="form-control" placeholder="e.g. IT & Software" />
+                            <span asp-validation-for="Industry" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="MinCGPA" class="form-label fw-semibold"></label>
+                            <input asp-for="MinCGPA" class="form-control" type="number" step="0.1" min="0" max="10" />
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="PackageOffered" class="form-label fw-semibold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text">₹ LPA</span>
+                                <input asp-for="PackageOffered" class="form-control" type="number" step="0.1" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="StudentsHired" class="form-label fw-semibold"></label>
+                            <input asp-for="StudentsHired" class="form-control" type="number" min="0" value="0" />
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="DriveDate" class="form-label fw-semibold"></label>
+                            <input asp-for="DriveDate" class="form-control" type="date" />
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Location" class="form-label fw-semibold"></label>
+                            <input asp-for="Location" class="form-control" placeholder="e.g. Bangalore / Remote" />
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="Website" class="form-label fw-semibold"></label>
+                            <input asp-for="Website" class="form-control" placeholder="https://example.com" />
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary px-4">Register Company</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

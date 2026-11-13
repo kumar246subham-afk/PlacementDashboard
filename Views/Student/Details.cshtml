@@ -1,0 +1,103 @@
+@model PlacementDashboard.Models.Student
+@{
+    ViewData["Title"] = "Student Details (DetailsView Control)";
+}
+
+<div class="d-flex align-items-center mb-4">
+    <a asp-action="Index" class="btn btn-outline-secondary me-3"><i class="bi bi-arrow-left"></i></a>
+    <div>
+        <h2 class="fw-bold mb-0">Student Profile</h2>
+        <span class="badge bg-dark">ASP.NET Data Control: DetailsView Pattern</span>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-person-circle me-2"></i>@Model.StudentName</h5>
+                <span class="badge @(Model.PlacementStatus == "Placed" ? "bg-success" : "bg-danger")">
+                    @Model.PlacementStatus
+                </span>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <small class="text-muted d-block">Student ID</small>
+                        <strong>#@Model.StudentId</strong>
+                    </div>
+                    <div class="col-sm-6">
+                        <small class="text-muted d-block">Roll Number</small>
+                        <span class="badge bg-light text-dark border fs-6">@Model.RollNumber</span>
+                    </div>
+                    <div class="col-sm-6">
+                        <small class="text-muted d-block">Department</small>
+                        <p class="fs-5 fw-semibold mb-0">@Model.Department</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <small class="text-muted d-block">CGPA</small>
+                        <span class="badge bg-info text-dark fs-6">@Model.CGPA / 10.0</span>
+                    </div>
+                    <div class="col-sm-6">
+                        <small class="text-muted d-block">Batch</small>
+                        <p class="mb-0">@Model.BatchYear</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <small class="text-muted d-block">Email</small>
+                        <p class="mb-0">@(Model.Email ?? "Not provided")</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <small class="text-muted d-block">Phone Number</small>
+                        <p class="mb-0">@(Model.Phone ?? "Not provided")</p>
+                    </div>
+                </div>
+
+                <hr />
+
+                <h6 class="fw-bold text-primary mb-3"><i class="bi bi-briefcase me-2"></i>Campus Placement Offer</h6>
+                @if (Model.PlacementStatus == "Placed")
+                {
+                    <div class="row g-3 bg-light p-3 rounded">
+                        <div class="col-sm-4">
+                            <small class="text-muted d-block">Recruiting Company</small>
+                            <h5 class="text-primary fw-bold mb-0">@Model.CompanyName</h5>
+                        </div>
+                        <div class="col-sm-4">
+                            <small class="text-muted d-block">Package Offered</small>
+                            <h5 class="text-success fw-bold mb-0">₹@Model.Package LPA</h5>
+                        </div>
+                        <div class="col-sm-4">
+                            <small class="text-muted d-block">Offer Date</small>
+                            <p class="mb-0">@(Model.OfferDate?.ToString("dd-MMMM-yyyy") ?? "N/A")</p>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-warning mb-0">
+                        <i class="bi bi-exclamation-circle me-1"></i> Student is currently unplaced. Eligible for upcoming campus placement drives.
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow-sm mb-3">
+            <div class="card-header bg-dark text-white">
+                <h6 class="mb-0"><i class="bi bi-gear me-2"></i>Actions</h6>
+            </div>
+            <div class="card-body d-grid gap-2">
+                <a asp-action="Edit" asp-route-id="@Model.StudentId" class="btn btn-warning">
+                    <i class="bi bi-pencil me-1"></i> Edit Student
+                </a>
+                <a asp-action="Delete" asp-route-id="@Model.StudentId" class="btn btn-danger">
+                    <i class="bi bi-trash me-1"></i> Delete Record
+                </a>
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="bi bi-list me-1"></i> Return to GridView
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

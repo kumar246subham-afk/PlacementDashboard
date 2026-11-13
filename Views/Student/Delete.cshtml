@@ -1,0 +1,44 @@
+@model PlacementDashboard.Models.Student
+@{
+    ViewData["Title"] = "Delete Student Record";
+}
+
+<div class="d-flex align-items-center mb-4">
+    <a asp-action="Index" class="btn btn-outline-secondary me-3"><i class="bi bi-arrow-left"></i></a>
+    <div>
+        <h2 class="fw-bold mb-0 text-danger">Delete Student Record</h2>
+        <small class="text-muted">ADO.NET DELETE Execution via SqlCommand.ExecuteNonQuery</small>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card border-danger shadow-sm">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0"><i class="bi bi-exclamation-triangle-fill me-2"></i>Confirm Permanent Deletion</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-danger fw-semibold">
+                    Are you sure you want to permanently remove this student record from the placement database?
+                </p>
+
+                <div class="bg-light p-3 rounded mb-3">
+                    <p class="mb-1"><strong>Name:</strong> @Model.StudentName</p>
+                    <p class="mb-1"><strong>Roll Number:</strong> @Model.RollNumber</p>
+                    <p class="mb-1"><strong>Department:</strong> @Model.Department</p>
+                    <p class="mb-1"><strong>CGPA:</strong> @Model.CGPA</p>
+                    <p class="mb-0"><strong>Status:</strong> @Model.PlacementStatus @(Model.PlacementStatus == "Placed" ? $"({Model.CompanyName} - ₹{Model.Package} LPA)" : "")</p>
+                </div>
+
+                <form asp-action="Delete" method="post" class="d-flex justify-content-end gap-2">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="StudentId" />
+                    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-danger px-4" onclick="return confirm('Confirm deleting this record?')">
+                        <i class="bi bi-trash me-1"></i> Yes, Delete
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

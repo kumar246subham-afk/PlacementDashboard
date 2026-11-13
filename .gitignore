@@ -1,0 +1,16 @@
+## Build & Object folders
+bin/
+obj/
+
+## VS & IDE Cache
+.vs/
+.idea/
+*.user
+*.suo
+
+## Sensitive / Local Configurations
+appsettings.Development.json
+
+## OS files
+.DS_Store
+Thumbs.db

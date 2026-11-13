@@ -1,0 +1,112 @@
+@model PlacementDashboard.Models.Student
+@{
+    ViewData["Title"] = "Edit Student";
+    var depts = ViewBag.Departments as List<string> ?? new();
+}
+
+<div class="d-flex align-items-center mb-4">
+    <a asp-action="Index" class="btn btn-outline-secondary me-3"><i class="bi bi-arrow-left"></i></a>
+    <div>
+        <h2 class="fw-bold mb-0">Update Student: @Model.StudentName</h2>
+        <small class="text-muted">Roll Number: @Model.RollNumber &bull; ADO.NET UPDATE Command</small>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <div class="card shadow-sm">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0"><i class="bi bi-pencil-square me-2"></i>Edit Student Information</h5>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Edit" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="StudentId" />
+                    <div asp-validation-summary="All" class="alert alert-danger" style="display:none"></div>
+
+                    <h6 class="fw-bold text-dark mb-3">Academic Information</h6>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label asp-for="StudentName" class="form-label fw-semibold"></label>
+                            <input asp-for="StudentName" class="form-control" />
+                            <span asp-validation-for="StudentName" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="RollNumber" class="form-label fw-semibold"></label>
+                            <input asp-for="RollNumber" class="form-control" />
+                            <span asp-validation-for="RollNumber" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Department" class="form-label fw-semibold"></label>
+                            <select asp-for="Department" class="form-select">
+                                @foreach (var d in depts)
+                                {
+                                    <option value="@d" selected="@(Model.Department == d)">@d</option>
+                                }
+                            </select>
+                            <span asp-validation-for="Department" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="CGPA" class="form-label fw-semibold"></label>
+                            <input asp-for="CGPA" class="form-control" type="number" step="0.01" min="0" max="10" />
+                            <span asp-validation-for="CGPA" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="BatchYear" class="form-label fw-semibold"></label>
+                            <input asp-for="BatchYear" class="form-control" />
+                            <span asp-validation-for="BatchYear" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <h6 class="fw-bold text-dark mb-3">Contact Details</h6>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label asp-for="Email" class="form-label fw-semibold"></label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Phone" class="form-label fw-semibold"></label>
+                            <input asp-for="Phone" class="form-control" />
+                            <span asp-validation-for="Phone" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <h6 class="fw-bold text-dark mb-3">Placement Details</h6>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <label asp-for="PlacementStatus" class="form-label fw-semibold"></label>
+                            <select asp-for="PlacementStatus" class="form-select">
+                                <option value="Unplaced" selected="@(Model.PlacementStatus == "Unplaced")">Unplaced</option>
+                                <option value="Placed" selected="@(Model.PlacementStatus == "Placed")">Placed</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="CompanyName" class="form-label fw-semibold"></label>
+                            <input asp-for="CompanyName" class="form-control" />
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Package" class="form-label fw-semibold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text">₹ LPA</span>
+                                <input asp-for="Package" class="form-control" type="number" step="0.1" min="0" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="OfferDate" class="form-label fw-semibold"></label>
+                            <input class="form-control" type="date" name="OfferDate"
+                                   value="@(Model.OfferDate?.ToString("yyyy-MM-dd"))" />
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-warning px-4">
+                            <i class="bi bi-check-circle me-1"></i> Update Record
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

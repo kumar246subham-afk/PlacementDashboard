@@ -1,0 +1,116 @@
+@model PlacementDashboard.Models.Student
+@{
+    ViewData["Title"] = "Register Student (FormView Control)";
+    var depts = ViewBag.Departments as List<string> ?? new();
+}
+
+<div class="d-flex align-items-center mb-4">
+    <a asp-action="Index" class="btn btn-outline-secondary me-3"><i class="bi bi-arrow-left"></i></a>
+    <div>
+        <h2 class="fw-bold mb-0">Register New Student</h2>
+        <small class="text-muted">Data Control: FormView / Insert Template &bull; ADO.NET INSERT Command</small>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-person-badge me-2"></i>Student Registration Form</h5>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Create" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="All" class="alert alert-danger" style="display:none"></div>
+
+                    <h6 class="fw-bold text-primary mb-3">Academic Details</h6>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label asp-for="StudentName" class="form-label fw-semibold"></label>
+                            <input asp-for="StudentName" class="form-control" placeholder="e.g. Subham Kumar" />
+                            <span asp-validation-for="StudentName" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="RollNumber" class="form-label fw-semibold"></label>
+                            <input asp-for="RollNumber" class="form-control" placeholder="e.g. 21BCE045" />
+                            <span asp-validation-for="RollNumber" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Department" class="form-label fw-semibold"></label>
+                            <select asp-for="Department" class="form-select">
+                                <option value="">-- Select Department --</option>
+                                @foreach (var d in depts)
+                                {
+                                    <option value="@d">@d</option>
+                                }
+                            </select>
+                            <span asp-validation-for="Department" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="CGPA" class="form-label fw-semibold"></label>
+                            <input asp-for="CGPA" class="form-control" type="number" step="0.01" min="0" max="10" placeholder="e.g. 8.75" />
+                            <span asp-validation-for="CGPA" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="BatchYear" class="form-label fw-semibold"></label>
+                            <input asp-for="BatchYear" class="form-control" placeholder="e.g. 2024-2025" />
+                            <span asp-validation-for="BatchYear" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <h6 class="fw-bold text-primary mb-3">Contact Information</h6>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label asp-for="Email" class="form-label fw-semibold"></label>
+                            <input asp-for="Email" class="form-control" placeholder="student@college.edu" />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Phone" class="form-label fw-semibold"></label>
+                            <input asp-for="Phone" class="form-control" placeholder="+91 9876543210" />
+                            <span asp-validation-for="Phone" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <h6 class="fw-bold text-primary mb-3">Placement Status</h6>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <label asp-for="PlacementStatus" class="form-label fw-semibold"></label>
+                            <select asp-for="PlacementStatus" class="form-select" id="statusSelect">
+                                <option value="Unplaced">Unplaced</option>
+                                <option value="Placed">Placed</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="CompanyName" class="form-label fw-semibold"></label>
+                            <input asp-for="CompanyName" class="form-control" placeholder="e.g. Google India" />
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Package" class="form-label fw-semibold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text">₹ LPA</span>
+                                <input asp-for="Package" class="form-control" type="number" step="0.1" min="0" placeholder="e.g. 12.5" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="OfferDate" class="form-label fw-semibold"></label>
+                            <input asp-for="OfferDate" class="form-control" type="date" />
+                        </div>
+                    </div>
+
+                    <div class="alert alert-light border small text-muted">
+                        <i class="bi bi-info-circle me-1"></i>
+                        <strong>ADO.NET Operation:</strong> Executes <code>SqlCommand.ExecuteScalar()</code> with parameterized SQL to prevent SQL injection and retrieve the newly inserted <code>SCOPE_IDENTITY()</code>.
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary px-4">
+                            <i class="bi bi-save me-1"></i> Save Student Record
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

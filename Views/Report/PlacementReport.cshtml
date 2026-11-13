@@ -1,0 +1,184 @@
+@model List<PlacementDashboard.Models.Student>
+@{
+    ViewData["Title"] = "Official Placement Report (Crystal Reports Layout)";
+    var depts = ViewBag.Departments as List<string> ?? new();
+    var grouped = Model.GroupBy(s => s.Department).OrderBy(g => g.Key).ToList();
+}
+
+<!-- Action / Filter Bar (Hidden when printing) -->
+<div class="card shadow-sm mb-4 no-print">
+    <div class="card-body d-flex flex-wrap justify-content-between align-items-center gap-2">
+        <div class="d-flex align-items-center gap-2">
+            <a asp-action="Index" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left"></i> Reports Hub</a>
+            <span class="badge bg-primary">Crystal Reports Engine View</span>
+        </div>
+        <form method="get" class="d-flex align-items-center gap-2">
+            <select name="department" class="form-select form-select-sm" style="width: auto;">
+                <option value="">All Departments</option>
+                @foreach (var d in depts)
+                {
+                    <option value="@d" selected="@(ViewBag.SelectedDepartment == d)">@d</option>
+                }
+            </select>
+            <input type="text" name="batch" value="@ViewBag.SelectedBatch" class="form-control form-control-sm" placeholder="Batch Year" style="width: 130px;" />
+            <button type="submit" class="btn btn-sm btn-outline-primary"><i class="bi bi-funnel"></i> Apply</button>
+        </form>
+        <div>
+            <button onclick="window.print()" class="btn btn-success btn-sm px-3 shadow-sm">
+                <i class="bi bi-printer-fill me-1"></i> Print / Export to PDF
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Crystal Report Document Container -->
+<div class="card shadow crystal-report-container bg-white p-4 p-md-5 mb-5" style="border: 1px solid #cbd5e1; border-radius: 4px;">
+
+    <!-- ==================== REPORT HEADER ==================== -->
+    <div class="text-center pb-3 mb-4" style="border-bottom: 3px double #1e293b;">
+        <div class="d-flex justify-content-center align-items-center mb-2">
+            <i class="bi bi-mortarboard-fill fs-1 text-primary me-3"></i>
+            <div>
+                <h3 class="fw-bold text-uppercase mb-0 tracking-wider">ABC INSTITUTE OF ENGINEERING & TECHNOLOGY</h3>
+                <small class="text-muted">Approved by AICTE &bull; Affiliated to State Technological University</small>
+            </div>
+        </div>
+        <div class="bg-dark text-white py-1 my-2 text-uppercase fw-bold" style="letter-spacing: 2px;">
+            CAMPUS PLACEMENT & RECRUITMENT OFFER REPORT
+        </div>
+        <div class="d-flex justify-content-between text-muted small px-2">
+            <span><strong>Academic Year:</strong> @(string.IsNullOrEmpty(ViewBag.SelectedBatch as string) ? "2024 - 2025" : ViewBag.SelectedBatch)</span>
+            <span><strong>Generated Date:</strong> @DateTime.Now.ToString("dd MMMM yyyy, hh:mm tt")</span>
+            <span><strong>Scope:</strong> @(string.IsNullOrEmpty(ViewBag.SelectedDepartment as string) ? "All Departments" : ViewBag.SelectedDepartment)</span>
+        </div>
+    </div>
+
+    <!-- ==================== REPORT SUMMARY KPI STRIP ==================== -->
+    <div class="row g-2 mb-4 text-center">
+        <div class="col-4">
+            <div class="p-2 border rounded bg-light">
+                <small class="text-muted d-block text-uppercase">Total Placed Students</small>
+                <h4 class="fw-bold mb-0 text-primary">@ViewBag.TotalCount</h4>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="p-2 border rounded bg-light">
+                <small class="text-muted d-block text-uppercase">Highest Package (CTC)</small>
+                <h4 class="fw-bold mb-0 text-success">₹@ViewBag.MaxPackage LPA</h4>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="p-2 border rounded bg-light">
+                <small class="text-muted d-block text-uppercase">Institutional Avg Package</small>
+                <h4 class="fw-bold mb-0 text-info">₹@ViewBag.AvgPackage LPA</h4>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== GROUPED DETAILS SECTION ==================== -->
+    @if (!grouped.Any())
+    {
+        <div class="text-center py-5 text-muted">
+            <i class="bi bi-folder-x fs-1 d-block mb-2"></i>
+            <p>No placement records match the specified criteria.</p>
+        </div>
+    }
+    else
+    {
+        @foreach (var group in grouped)
+        {
+            var deptCount = group.Count();
+            var deptAvg = Math.Round(group.Average(s => s.Package ?? 0), 2);
+            var deptMax = group.Max(s => s.Package ?? 0);
+
+            <!-- Group Header -->
+            <div class="mb-4">
+                <div class="p-2 bg-light border-start border-4 border-primary d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="fw-bold text-primary mb-0 text-uppercase">
+                        <i class="bi bi-folder2-open me-2"></i>Department: @group.Key
+                    </h6>
+                    <small class="badge bg-secondary">@deptCount Students Placed</small>
+                </div>
+
+                <!-- Group Details Table -->
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm align-middle mb-1" style="font-size: 0.9rem;">
+                        <thead style="background-color: #f1f5f9;">
+                            <tr>
+                                <th style="width: 50px;" class="text-center">S.No</th>
+                                <th style="width: 130px;">Roll Number</th>
+                                <th>Student Name</th>
+                                <th style="width: 80px;" class="text-center">CGPA</th>
+                                <th>Recruiting Company</th>
+                                <th style="width: 120px;" class="text-end">Package (LPA)</th>
+                                <th style="width: 120px;" class="text-center">Offer Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ int index = 1; }
+                            @foreach (var s in group)
+                            {
+                                <tr>
+                                    <td class="text-center">@(index++)</td>
+                                    <td><code>@s.RollNumber</code></td>
+                                    <td class="fw-semibold">@s.StudentName</td>
+                                    <td class="text-center">@s.CGPA</td>
+                                    <td><strong>@s.CompanyName</strong></td>
+                                    <td class="text-end fw-bold text-success">₹@s.Package LPA</td>
+                                    <td class="text-center text-muted small">@(s.OfferDate?.ToString("dd-MMM-yyyy") ?? "—")</td>
+                                </tr>
+                            }
+                        </tbody>
+                        <!-- Group Footer / Subtotal -->
+                        <tfoot style="background-color: #f8fafc; font-weight: 600;">
+                            <tr>
+                                <td colspan="4" class="text-end">Department Sub-Total & Averages:</td>
+                                <td>@deptCount Placements</td>
+                                <td class="text-end text-primary">Avg: ₹@deptAvg LPA</td>
+                                <td class="text-center small text-muted">Max: ₹@deptMax LPA</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        }
+
+        <!-- ==================== REPORT FOOTER (GRAND TOTALS) ==================== -->
+        <div class="p-3 border rounded bg-light mt-4 mb-5">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h6 class="fw-bold text-dark text-uppercase mb-1">Institutional Report Grand Totals</h6>
+                    <small class="text-muted">Total Placed Students Across All Departments: <strong>@ViewBag.TotalCount</strong></small>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <span class="me-3">Highest Offer: <strong class="text-success">₹@ViewBag.MaxPackage LPA</strong></span>
+                    <span>Campus Average: <strong class="text-primary">₹@ViewBag.AvgPackage LPA</strong></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SIGNATURE & AUDIT BLOCK ==================== -->
+        <div class="pt-5 mt-5">
+            <div class="row text-center">
+                <div class="col-4">
+                    <div style="border-top: 1px dashed #64748b; padding-top: 8px;">
+                        <p class="fw-bold mb-0">Placement Coordinator</p>
+                        <small class="text-muted">Verified & Reconciled</small>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div style="border-top: 1px dashed #64748b; padding-top: 8px;">
+                        <p class="fw-bold mb-0">Head of T&P Cell (TPO)</p>
+                        <small class="text-muted">Authorized Signature</small>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div style="border-top: 1px dashed #64748b; padding-top: 8px;">
+                        <p class="fw-bold mb-0">Principal / Director</p>
+                        <small class="text-muted">Official Seal & Approval</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

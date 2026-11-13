@@ -1,0 +1,69 @@
+@model List<PlacementDashboard.Models.Company>
+@{
+    ViewData["Title"] = "Recruiting Companies";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold mb-1">
+            <i class="bi bi-building-check text-primary me-2"></i>Recruiting Companies
+        </h2>
+        <span class="badge bg-dark">Recruiter Profiles & Drive Schedules</span>
+    </div>
+    <div>
+        <a asp-action="Create" class="btn btn-primary shadow-sm">
+            <i class="bi bi-plus-circle me-1"></i> Add Company
+        </a>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-buildings me-2"></i>Participating Companies (@Model.Count)</span>
+        <small class="text-secondary">ADO.NET SqlDataReader Bound List</small>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped align-middle mb-0">
+                <thead class="table-secondary">
+                    <tr>
+                        <th>#</th>
+                        <th>Company Name</th>
+                        <th>Sector / Industry</th>
+                        <th class="text-center">Min CGPA</th>
+                        <th class="text-end">Package (LPA)</th>
+                        <th class="text-center">Hired Count</th>
+                        <th>Drive Date</th>
+                        <th>Location</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var c in Model)
+                    {
+                        <tr>
+                            <td>@c.CompanyId</td>
+                            <td class="fw-bold">@c.CompanyName</td>
+                            <td><span class="badge bg-light text-dark border">@c.Industry</span></td>
+                            <td class="text-center">@c.MinCGPA</td>
+                            <td class="text-end fw-bold text-success">₹@c.PackageOffered LPA</td>
+                            <td class="text-center"><span class="badge bg-primary">@c.StudentsHired</span></td>
+                            <td>@c.DriveDate.ToString("dd-MMM-yyyy")</td>
+                            <td>@(c.Location ?? "N/A")</td>
+                            <td class="text-center">
+                                <div class="btn-group btn-group-sm">
+                                    <a asp-action="Edit" asp-route-id="@c.CompanyId" class="btn btn-outline-warning" title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@c.CompanyId" class="btn btn-outline-danger" title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
