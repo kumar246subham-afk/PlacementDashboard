@@ -8,6 +8,9 @@ builder.Services.AddControllersWithViews();
 // Register ADO.NET PlacementRepository
 builder.Services.AddScoped<PlacementRepository>();
 
+// Bind to port 5000 and 5226
+builder.WebHost.UseUrls("http://localhost:5000", "http://localhost:5226");
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
@@ -16,9 +19,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
 app.UseAuthorization();
 
